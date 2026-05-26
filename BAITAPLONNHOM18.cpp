@@ -335,9 +335,25 @@ public:
             throw; 
         }
 
+        // --- TRICH XUAT 3 KY TU SO CUOI CUA BIEN SO ---
         string bs = khoXe[chuyenXe.getIndexXe()].bienSo;
-        string duoi = bs.substr(bs.length() - 3);
-        stringstream ss; ss << "N18-" << duoi << "-" << setfill('0') << setw(3) << stt;
+        string chiSo = "";
+        
+        for (char c : bs) {
+            if (isdigit(c)) {
+                chiSo += c;
+            }
+        }
+        
+        string baSoCuoi = "000";
+        if (chiSo.length() >= 3) {
+            baSoCuoi = chiSo.substr(chiSo.length() - 3);
+        } else if (!chiSo.empty()) {
+            baSoCuoi = string(3 - chiSo.length(), '0') + chiSo;
+        }
+
+        stringstream ss; 
+        ss << "N18-" << baSoCuoi << "-" << setfill('0') << setw(3) << stt;
         maVe = ss.str();
 
         string diemTra = chuyenXe.getDiemTra();
@@ -376,7 +392,27 @@ public:
              << CYAN << " | " << RESET << left << setw(5)  << (coTrungChuyen ? "Co" : "K")
              << CYAN << " | " << RESET << GREEN << right << setw(10) << tongTien << RESET << CYAN << " |\n" << RESET;
     }
+    void inBienLai() {
+        long long tongTien = (long long)chuyenXe.getGiaMotVe() * chuyenXe.getSoLuongVe();
+        if (coTrungChuyen) tongTien += (30000LL * chuyenXe.getSoLuongVe());
 
+        cout << GREEN << "\n\t--------------------------------------------------" << RESET;
+        cout << BLUE  << "\n\t              BIEN LAI DAT VE XE KHACH            " << RESET;
+        cout << GREEN << "\n\t--------------------------------------------------" << RESET;
+        cout << "\n\t  * Ma ve: " << MAGENTA << maVe << RESET;
+        cout << "\n\t  * Khach hang: " << khachHang->getHoTen();
+        cout << "\n\t  * So dien thoai: " << khachHang->getSoDienThoai();
+        cout << "\n\t  * Lo trinh: " << chuyenXe.getDiemDon() << " -> " << YELLOW << chuyenXe.getDiemTra() << RESET;
+        cout << "\n\t  * Khoang cach: " << chuyenXe.getKhoangCach() << " km";
+        cout << "\n\t  * Gio xe don du kien: " << YELLOW << chuyenXe.getGioDonXe() << RESET;
+        cout << "\n\t  * So luong ve mua: " << chuyenXe.getSoLuongVe() << " ve";
+        cout << "\n\t  * Dich vu trung chuyen: " << (coTrungChuyen ? "Co (30,000 d/ve)" : "Khong");
+        cout << GREEN << "\n\t  ------------------------------------------------" << RESET;
+        cout << "\n\t  => TONG TIEN THANH TOAN: " << GREEN << tongTien << " VND" << RESET;
+        cout << GREEN << "\n\t--------------------------------------------------" << RESET;
+        cout << GREEN << "\n   [OK] Dat ve thanh cong! Kho ghe he thong da cap nhat.\n" << RESET;
+    }
+    
     int getGia() { return chuyenXe.getGiaMotVe(); }
     string getMaVe() { return maVe; }
     string getTenKhach() { return khachHang->getHoTen(); }
@@ -500,12 +536,12 @@ int main() {
 
     int chonLua;
     while (true) {
-        cout << BLUE << "\n      ======= HE THONG DIEU HANH QUAN LY VE XE N18 LITE =======\n" << RESET;
-        cout << CYAN << "      | " << RESET << "  1. Dat ve xe moi (Chon tuyen -> Chon gio)           " << CYAN << "|\n" << RESET;
-        cout << CYAN << "      | " << RESET << "  2. In toan bo danh sach ve da dat (Dang bang)       " << CYAN << "|\n" << RESET;
+        cout << BLUE << "\n      ========== HE THONG DIEU HANH QUAN LY VE XE N18 =========\n" << RESET;
+        cout << CYAN << "      | " << RESET << "  1. Dat ve xe moi                                    " << CYAN << "|\n" << RESET;
+        cout << CYAN << "      | " << RESET << "  2. In toan bo danh sach ve da dat                   " << CYAN << "|\n" << RESET;
         cout << CYAN << "      | " << RESET << "  3. Sap xep danh sach ve theo gia tang dan           " << CYAN << "|\n" << RESET;
         cout << CYAN << "      | " << RESET << "  4. Tim kiem ve theo Ma ve / Ten khach hang          " << CYAN << "|\n" << RESET;
-        cout << CYAN << "      | " << RESET << "  5. Huy / Xoa ve xe khoi he thong (Hoan ghe)         " << CYAN << "|\n" << RESET;
+        cout << CYAN << "      | " << RESET << "  5. Huy / Xoa ve xe khoi he thong                    " << CYAN << "|\n" << RESET;
         cout << CYAN << "      | " << RESET << "  6. Luu thu cong du lieu hien tai ra file 'data.csv' " << CYAN << "|\n" << RESET;
         cout << CYAN << "      | " << RESET << "  0. Thoat chuong trinh                               " << CYAN << "|\n" << RESET;
         cout << CYAN << "      =========================================================\n" << RESET;
@@ -517,7 +553,10 @@ int main() {
         switch (chonLua) {
             case 1: {
                 try {
-                    VeXe v; v.nhap(ql.laySTT()); ql.them(v);
+                    VeXe v; 
+                    v.nhap(ql.laySTT()); 
+                    v.inBienLai();       
+                    ql.them(v);          
                 } catch(...) {}
                 break;
             }
