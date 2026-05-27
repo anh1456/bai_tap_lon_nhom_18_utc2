@@ -373,26 +373,7 @@ public:
             cout << GREEN << "\n   [*] LUU Y: Ban xuong xe doc duong tai tram [" << diemTra << "]. He thong KHONG ho tro dich vu xe trung chuyen!\n" << RESET;
         }
     }
-
     void xuat() {
-        long long tongTien = (long long)chuyenXe.getGiaMotVe() * chuyenXe.getSoLuongVe();
-        if (coTrungChuyen) tongTien += (30000LL * chuyenXe.getSoLuongVe());
-
-        cout << CYAN << "| " << RESET << MAGENTA << left << setw(11) << maVe << RESET
-             << CYAN << " | " << RESET << left << setw(16) << khachHang->getHoTen()
-             << CYAN << " | " << RESET << setw(11) << khachHang->getSoDienThoai()
-             << CYAN << " | " << RESET << setw(7)  << chuyenXe.getMaChuyen()
-             << CYAN << " | " << RESET << setw(5)  << chuyenXe.getLoaiDuong()
-             << CYAN << " | " << RESET << setw(13) << chuyenXe.getDiemDon()
-             << CYAN << " | " << RESET << YELLOW << setw(13) << chuyenXe.getDiemTra() << RESET
-             << CYAN << " | " << RESET << right << setw(5) << chuyenXe.getKhoangCach() << "km"
-             << CYAN << " | " << RESET << left << setw(7)  << chuyenXe.getGioDonXe()
-             << CYAN << " | " << RESET << right << setw(6) << chuyenXe.getGiaMotVe()
-             << CYAN << " | " << RESET << setw(2)  << chuyenXe.getSoLuongVe()
-             << CYAN << " | " << RESET << left << setw(5)  << (coTrungChuyen ? "Co" : "K")
-             << CYAN << " | " << RESET << GREEN << right << setw(10) << tongTien << RESET << CYAN << " |\n" << RESET;
-    }
-    void inBienLai() {
         long long tongTien = (long long)chuyenXe.getGiaMotVe() * chuyenXe.getSoLuongVe();
         if (coTrungChuyen) tongTien += (30000LL * chuyenXe.getSoLuongVe());
 
@@ -555,7 +536,7 @@ int main() {
                 try {
                     VeXe v; 
                     v.nhap(ql.laySTT()); 
-                    v.inBienLai();       
+                    v.xuat();       
                     ql.them(v);          
                 } catch(...) {}
                 break;
